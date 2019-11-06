@@ -125,7 +125,7 @@ misspell-correction:
 
 .PHONY: staticcheck
 staticcheck:
-	export GOFLAGS=$(GOMOD) && $(STATICCHECK) ./...
+	GOFLAGS=$(GOMOD) $(STATICCHECK) ./...
 
 .PHONY: vet
 vet:
