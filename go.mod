@@ -6,6 +6,7 @@ require (
 	contrib.go.opencensus.io/exporter/ocagent v0.6.0
 	contrib.go.opencensus.io/resource v0.1.2
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/aws/aws-sdk-go v1.25.48 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.2.2
 	github.com/client9/misspell v0.3.4
 	github.com/dropbox/godropbox v0.0.0-20190501155911-5749d3b71cbe // indirect
@@ -27,6 +28,7 @@ require (
 	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191204165229-c897290808c9
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191203211755-8ae89debd6c5
 	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
+	github.com/pierrec/lz4 v2.0.5+incompatible // indirect
 	github.com/rs/cors v1.6.0
 	github.com/shirou/gopsutil v2.19.9+incompatible
 	github.com/signalfx/golib v2.5.1+incompatible
