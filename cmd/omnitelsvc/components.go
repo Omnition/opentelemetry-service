@@ -42,7 +42,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector/receiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/jaegerreceiver"
 	"github.com/open-telemetry/opentelemetry-collector/receiver/prometheusreceiver"
-	"github.com/open-telemetry/opentelemetry-collector/receiver/zipkinreceiver"
 
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/omnishard"
 	"github.com/Omnition/omnition-opentelemetry-collector/exporter/opencensusexporter"
@@ -51,6 +50,7 @@ import (
 	"github.com/Omnition/omnition-opentelemetry-collector/processor/memorylimiter"
 	"github.com/Omnition/omnition-opentelemetry-collector/receiver/memorymonitor"
 	"github.com/Omnition/omnition-opentelemetry-collector/receiver/opencensusreceiver"
+	"github.com/Omnition/omnition-opentelemetry-collector/receiver/zipkinreceiver"
 )
 
 func components() (config.Factories, error) {
