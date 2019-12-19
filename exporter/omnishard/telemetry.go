@@ -48,7 +48,8 @@ var (
 
 // MetricViews return the metrics views according to given telemetry level.
 func metricViews() []*view.View {
-	tagKeys := []tag.Key{tagExporterName, tagShardID}
+	exporterTags := []tag.Key{tagExporterName}
+	exporterShardIDTags := []tag.Key{tagExporterName, tagShardID}
 
 	// There are some metrics enabled, return the views.
 
@@ -56,7 +57,7 @@ func metricViews() []*view.View {
 		Name:        statFlushedSpans.Name(),
 		Measure:     statFlushedSpans,
 		Description: statFlushedSpans.Description(),
-		TagKeys:     tagKeys,
+		TagKeys:     exporterShardIDTags,
 		Aggregation: view.Sum(),
 	}
 
@@ -64,7 +65,7 @@ func metricViews() []*view.View {
 		Name:        "omnishard_flushed_batches",
 		Measure:     statFlushedSpans,
 		Description: "number of batches flushed to omnishard exporter",
-		TagKeys:     tagKeys,
+		TagKeys:     exporterShardIDTags,
 		Aggregation: view.Count(),
 	}
 
@@ -72,7 +73,7 @@ func metricViews() []*view.View {
 		Name:        statFlushedSpansBytes.Name(),
 		Measure:     statFlushedSpansBytes,
 		Description: statFlushedSpansBytes.Description(),
-		TagKeys:     tagKeys,
+		TagKeys:     exporterShardIDTags,
 		Aggregation: view.LastValue(),
 	}
 
@@ -80,7 +81,7 @@ func metricViews() []*view.View {
 		Name:        statXLSpansBytes.Name(),
 		Measure:     statXLSpansBytes,
 		Description: statXLSpansBytes.Description(),
-		TagKeys:     tagKeys,
+		TagKeys:     exporterShardIDTags,
 		Aggregation: view.Sum(),
 	}
 
@@ -88,7 +89,7 @@ func metricViews() []*view.View {
 		Name:        "omnishard_xl_spans",
 		Measure:     statXLSpansBytes,
 		Description: "number of spans found that were larger than max supported size",
-		TagKeys:     tagKeys,
+		TagKeys:     exporterShardIDTags,
 		Aggregation: view.Count(),
 	}
 
@@ -96,7 +97,7 @@ func metricViews() []*view.View {
 		Name:        statEnqueuedSpans.Name(),
 		Measure:     statEnqueuedSpans,
 		Description: statEnqueuedSpans.Description(),
-		TagKeys:     tagKeys,
+		TagKeys:     exporterTags,
 		Aggregation: view.Sum(),
 	}
 
@@ -104,7 +105,7 @@ func metricViews() []*view.View {
 		Name:        "omnishard_enqueued_batches",
 		Measure:     statEnqueuedSpans,
 		Description: "batches received and put in a queue to be processed by omnishard exporter",
-		TagKeys:     tagKeys,
+		TagKeys:     exporterTags,
 		Aggregation: view.Count(),
 	}
 
@@ -112,7 +113,7 @@ func metricViews() []*view.View {
 		Name:        statDequeuedSpans.Name(),
 		Measure:     statDequeuedSpans,
 		Description: statDequeuedSpans.Description(),
-		TagKeys:     tagKeys,
+		TagKeys:     exporterTags,
 		Aggregation: view.Sum(),
 	}
 
@@ -120,7 +121,7 @@ func metricViews() []*view.View {
 		Name:        "omnishard_dequeued_batches",
 		Measure:     statDequeuedSpans,
 		Description: "batches taken out of queue and processed by omnishard exporter",
-		TagKeys:     tagKeys,
+		TagKeys:     exporterTags,
 		Aggregation: view.Count(),
 	}
 
@@ -128,13 +129,13 @@ func metricViews() []*view.View {
 		Name:        statCompressFactor.Name(),
 		Measure:     statCompressFactor,
 		Description: statCompressFactor.Description(),
-		TagKeys:     tagKeys,
+		TagKeys:     exporterShardIDTags,
 		Aggregation: view.LastValue(),
 	}
 
-	droppedTagKeys := make([]tag.Key, len(tagKeys)+1)
-	copy(droppedTagKeys, tagKeys)
-	droppedTagKeys[len(tagKeys)] = tagDropReason
+	droppedTagKeys := make([]tag.Key, len(exporterTags)+1)
+	copy(droppedTagKeys, exporterTags)
+	droppedTagKeys[len(exporterTags)] = tagDropReason
 
 	droppedSpansView := &view.View{
 		Name:        statDroppedSpans.Name(),
@@ -160,9 +161,9 @@ func metricViews() []*view.View {
 		Aggregation: view.Sum(),
 	}
 
-	sentTagKeys := make([]tag.Key, len(tagKeys)+1)
-	copy(sentTagKeys, tagKeys)
-	sentTagKeys[len(tagKeys)] = tagSendResult
+	sentTagKeys := make([]tag.Key, len(exporterTags)+1)
+	copy(sentTagKeys, exporterTags)
+	sentTagKeys[len(exporterTags)] = tagSendResult
 
 	sentSpansView := &view.View{
 		Name:        statSentSpans.Name(),

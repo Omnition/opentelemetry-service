@@ -125,7 +125,7 @@ misspell-correction:
 
 .PHONY: staticcheck
 staticcheck:
-	export GOFLAGS=$(GOMOD) && $(STATICCHECK) ./...
+	GOFLAGS=$(GOMOD) $(STATICCHECK) ./...
 
 .PHONY: vet
 vet:
@@ -152,6 +152,7 @@ dep:
 	rm -fr vendor
 	go mod vendor
 	gogoproto-rewriter vendor/github.com/open-telemetry/opentelemetry-collector/
+	gogoproto-rewriter vendor/github.com/open-telemetry/opentelemetry-collector-contrib/
 	gogoproto-rewriter vendor/contrib.go.opencensus.io/exporter/
 
 .PHONY: omnitelsvc

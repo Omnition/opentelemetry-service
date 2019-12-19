@@ -1,4 +1,5 @@
 vendor/
+local/
 
 # Editors
 .vscode/

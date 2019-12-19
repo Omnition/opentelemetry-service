@@ -50,16 +50,16 @@ type telemetryHooks struct {
 	dropSendErrNotRetryableTags        []tag.Mutator
 }
 
-func newTelemetryHooks(name, shardID string) *telemetryHooks {
+func newTelemetryHooks(exporterName, shardID string) *telemetryHooks {
 	tags := []tag.Mutator{
-		tag.Upsert(tagExporterName, name),
+		tag.Upsert(tagExporterName, exporterName),
 	}
 	if shardID != "" {
 		tags = append(tags, tag.Upsert(tagShardID, shardID))
 	}
 
 	h := &telemetryHooks{
-		exporterName: name,
+		exporterName: exporterName,
 		commonTags:   tags,
 	}
 

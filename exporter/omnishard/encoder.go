@@ -96,8 +96,8 @@ type shardEncoders []*shardEncoder
 
 // Options are the options to be used when initializing an encoder.
 type Options struct {
-	// TODO: document this field.
-	Name string
+	// ExporterName is the name of the exporter using the encoder.
+	ExporterName string
 
 	// Number of workers that will feed spans to shard encoders concurrently.
 	// Minimum and default value is 1.
@@ -155,7 +155,7 @@ func newEncoder(
 		logger:               logger,
 		onRecordReady:        onRecordReady,
 		onSpanProcessFail:    onSpanProcessFail,
-		hooks:                newTelemetryHooks(o.Name, ""),
+		hooks:                newTelemetryHooks(o.ExporterName, ""),
 		configChangeCond:     sync.NewCond(&sync.Mutex{}),
 		workerHardStopSignal: make(chan interface{}),
 	}
@@ -358,7 +358,7 @@ func (e *encoder) startShardEncoders(cfg *shardingInMemConfig) {
 	encoders := make(shardEncoders, 0, len(cfg.shards))
 	for _, shard := range cfg.shards {
 		// Create hooks to report per-shard operations.
-		hooks := newTelemetryHooks(o.Name, shard.shardID)
+		hooks := newTelemetryHooks(o.ExporterName, shard.shardID)
 		encoders = append(encoders, newShardEncoder(
 			e.logger,
 			shard,

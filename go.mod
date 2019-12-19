@@ -24,14 +24,15 @@ require (
 	github.com/juju/testing v0.0.0-20191001232224-ce9dec17d28b // indirect
 	github.com/omnition/gogoproto-rewriter v0.0.0-20190723134119-239e2d24817f
 	github.com/omnition/opencensus-go-exporter-kinesis v0.3.3-0.20190919185502-7031b700cdfe
-	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191205151336-8e2473c5e754
-	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191211173639-c78990cbbb53
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191211173639-c78990cbbb53
-	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191021165924-bb954188ac10
+	github.com/open-telemetry/opentelemetry-collector v0.2.1-0.20191209163440-5d463fe48816
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/kinesisexporter v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/sapmexporter v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/signalfxexporter v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sapmreceiver v0.0.0-20191216151958-b96fcb08e351
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/signalfxreceiver v0.0.0-20191218190817-7efaeccd8680
+	github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinscribereceiver v0.0.0-20191216151958-b96fcb08e351
 	github.com/rs/cors v1.6.0
 	github.com/shirou/gopsutil v2.19.9+incompatible
-	github.com/signalfx/com_signalfx_metrics_protobuf v0.0.0-20190530013331-054be550cb49 // indirect
-	github.com/signalfx/gohistogram v0.0.0-20160107210732-1ccfd2ff5083 // indirect
 	github.com/signalfx/golib v2.5.1+incompatible
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/soheilhy/cmux v0.1.4

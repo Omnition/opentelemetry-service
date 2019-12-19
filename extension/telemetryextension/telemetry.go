@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
-	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -41,6 +41,10 @@ const (
 	instanceVersionHeader = "X-Instance-Version"
 	telemetryDataHeader   = "X-Telemetry-Data-Type"
 	telemetryDataLogTag   = "telemetryDataType"
+
+	// Command-line options used by the extension.
+	configFileFlag  = "--config"
+	metricsPortFlag = "--metrics-port"
 )
 
 var (
@@ -67,31 +71,7 @@ var _ (extension.ServiceExtension) = (*telemetryExtension)(nil)
 
 func newTelemetryExtension(config Config, logger *zap.Logger) (*telemetryExtension, error) {
 
-	// Unfortunately, this is required to retrieve the command line arguments to the service.
-	// The command line arguments aren't accessible via Viper to the extensions.
-	// If the flags package is used, then it breaks the flags inherited from OpenTelemetry-Collector.
-	// This is a temporary work around until config parsing exposes the command line arguments
-	// in viper to the extensions.
-	metricsPort := ""
-	configFile := ""
-	setOfArgs := os.Args[1:]
-	argLen := len(setOfArgs)
-	for i, arg := range setOfArgs {
-		// Only set the metrics port global variable to be used within telemetry,
-		// if the next argument is of type UINT and it doesn't cause an index of out bounds error.
-		if arg == "--metrics-port" && i+1 < argLen {
-			// Ensure that the next argument is of UINT type as what is expected in the flags.
-			if _, err := strconv.ParseUint(setOfArgs[i+1], 10, 32); err == nil {
-				metricsPort = setOfArgs[i+1]
-			}
-		}
-
-		// Only set the config  global variable to be used within telemetry,
-		// if it doesn't cause an index of out bounds error.
-		if arg == "--config" && i+1 < argLen {
-			configFile = setOfArgs[i+1]
-		}
-	}
+	metricsPort, configFile := parseArgs(os.Args[1:])
 
 	// The config file is required for configuring the collector.
 	if configFile == "" {
@@ -168,8 +148,45 @@ func newTelemetryExtension(config Config, logger *zap.Logger) (*telemetryExtensi
 	return te, nil
 }
 
+// parseArgs expects the command-line arguments (minus the executable name) and
+// extract the expected metricsPort and configFile.
+func parseArgs(setOfArgs []string) (metricsPort string, configFile string) {
+	// Unfortunately, this is required to retrieve the command line arguments to the service.
+	// The command line arguments aren't accessible via Viper to the extensions.
+	// If the flags package is used, then it breaks the flags inherited from OpenTelemetry-Collector.
+	// This is a temporary work around until config parsing exposes the command line arguments
+	// in viper to the extensions.
+
+	// Helper function to handle a single command-line flag.
+	parseSingleFlag := func(i int, flag string, args []string) string {
+		// Do not bother with validation of parameters: if it is invalid the
+		// collector will not start and the code never reaches this point.
+		// A crash at start is preferable here than working without telemetry,
+		// the extension can be easily disabled if needed.
+		if len(args[i]) == len(flag) {
+			return args[i+1]
+		}
+		return strings.Split(args[i], "=")[1]
+	}
+
+	for i, arg := range setOfArgs {
+		switch {
+		case strings.Index(arg, metricsPortFlag) == 0:
+			metricsPort = parseSingleFlag(i, metricsPortFlag, setOfArgs)
+		case strings.Index(arg, configFileFlag) == 0:
+			configFile = parseSingleFlag(i, configFileFlag, setOfArgs)
+		}
+	}
+	return metricsPort, configFile
+}
+
 func (te *telemetryExtension) Start(host extension.Host) error {
-	te.logger.Info(fmt.Sprintf("Starting telemetry extension with endpoint: %q at scrape interval %q from source %q", te.cfg.Endpoint, te.cfg.ScrapeInterval.String(), te.sourceURL))
+	te.logger.Info(
+		"Starting telemetry extension",
+		zap.String("endpoint", te.cfg.Endpoint),
+		zap.Duration("scrape_interval", te.cfg.ScrapeInterval),
+		zap.String("source", te.sourceURL),
+		zap.String("uuid", te.uuidStr))
 	ticker := time.NewTicker(te.cfg.ScrapeInterval)
 	go func() {
 		for {

@@ -99,6 +99,7 @@ func NewExporter(cfg *Config, logger *zap.Logger, client client) (*Exporter, err
 	}
 
 	opt := &Options{
+		ExporterName:          cfg.Name(),
 		NumWorkers:            cfg.NumWorkers,
 		MaxAllowedSizePerSpan: cfg.MaxAllowedSizePerSpan,
 		BatchFlushInterval:    cfg.BatchFlushInterval,
