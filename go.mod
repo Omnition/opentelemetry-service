@@ -56,3 +56,5 @@ replace contrib.go.opencensus.io/exporter/ocagent => github.com/omnition/opencen
 replace github.com/census-instrumentation/opencensus-proto => github.com/omnition/opencensus-proto v0.2.1-gogo-unary
 
 replace git.apache.org/thrift.git => github.com/apache/thrift v0.12.0
+
+replace github.com/open-telemetry/opentelemetry-collector => github.com/owais/opentelemetry-collector v0.1.1-0.20191221015705-9b7fe3c20df9

@@ -16,6 +16,7 @@ package zipkinreceiver
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/open-telemetry/opentelemetry-collector/config/configmodels"
 	"github.com/open-telemetry/opentelemetry-collector/consumer"
@@ -32,12 +33,12 @@ type Factory struct {
 // CreateTraceReceiver wraps zipkinreceiver.ZipkinReceiver with a local ZipkinReceiver that implements IP address
 // extraction on to the context.
 func (f *Factory) CreateTraceReceiver(ctx context.Context, logger *zap.Logger, config configmodels.Receiver, nextConsumer consumer.TraceConsumer) (receiver.TraceReceiver, error) {
-	r, err := f.Factory.CreateTraceReceiver(ctx, logger, config, nextConsumer)
+	tr, err := f.Factory.CreateTraceReceiver(ctx, logger, config, nextConsumer)
 	if err != nil {
 		return nil, err
 	}
-	zr := r.(*zipkinreceiver.ZipkinReceiver)
+	zr := tr.(*zipkinreceiver.ZipkinReceiver)
+	zr = zr.WithHTTPServer(&http.Server{Handler: httpHanlder(zr)})
+	return zr, nil
 
-	rCfg := config.(*zipkinreceiver.Config)
-	return New(zr, rCfg.Endpoint, nextConsumer)
 }
